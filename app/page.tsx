@@ -1,31 +1,31 @@
-"use client"
+"use client";
 
-import type React from "react"
-import { useState } from "react"
-import ReactFlow, { Background, Controls, Panel } from "reactflow"
-import "reactflow/dist/style.css"
+import type React from "react";
+import { useState } from "react";
+import ReactFlow, { Background, Controls, Panel } from "reactflow";
+import "reactflow/dist/style.css";
 
 interface NodeData {
-  id: string
-  data: { label: string }
-  position: { x: number; y: number }
-  type?: string
+  id: string;
+  data: { label: string };
+  position: { x: number; y: number };
+  type?: string;
 }
 
 interface EdgeData {
-  id: string
-  source: string
-  target: string
+  id: string;
+  source: string;
+  target: string;
 }
 
 export default function MindmapPage() {
-  const [prompt, setPrompt] = useState("create mindmap to learn python")
-  const [nodes, setNodes] = useState<NodeData[]>([])
-  const [edges, setEdges] = useState<EdgeData[]>([])
-  const [loading, setLoading] = useState(false)
+  const [prompt, setPrompt] = useState("create mindmap to learn python");
+  const [nodes, setNodes] = useState<NodeData[]>([]);
+  const [edges, setEdges] = useState<EdgeData[]>([]);
+  const [loading, setLoading] = useState(false);
 
   const generateMindmap = async () => {
-    setLoading(true)
+    setLoading(true);
     try {
       const res = await fetch("/api/mindmap", {
         method: "POST",
@@ -33,19 +33,19 @@ export default function MindmapPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ prompt }),
-      })
+      });
 
-      if (!res.ok) throw new Error("Failed to generate mindmap")
+      if (!res.ok) throw new Error("Failed to generate mindmap");
 
-      const { nodes, edges } = await res.json()
-      setNodes(nodes)
-      setEdges(edges)
+      const { nodes, edges } = await res.json();
+      setNodes(nodes);
+      setEdges(edges);
     } catch (error) {
-      console.error("Error generating mindmap:", error)
+      console.error("Error generating mindmap:", error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleNodeClick = async (event: React.MouseEvent, node: any) => {
     try {
@@ -55,22 +55,26 @@ export default function MindmapPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(node.data),
-      })
+      });
 
-      if (!res.ok) throw new Error("Failed to process node")
+      if (!res.ok) throw new Error("Failed to process node");
 
-      const data = await res.json()
-      console.log(data)
+      const data = await res.json();
+      console.log(data);
     } catch (error) {
-      console.error("Error processing node:", error)
+      console.error("Error processing node:", error);
     }
-  }
+  };
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-6xl">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">Interactive Mindmap Generator</h1>
-        <p className="text-gray-600 mb-6">Enter a topic or concept to generate a visual mindmap</p>
+        <h1 className="text-3xl font-bold mb-2">
+          Interactive Mindmap Generator
+        </h1>
+        <p className="text-gray-600 mb-6">
+          Enter a topic or concept to generate a visual mindmap
+        </p>
       </div>
 
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 mb-6">
@@ -94,7 +98,14 @@ export default function MindmapPage() {
                 fill="none"
                 viewBox="0 0 24 24"
               >
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
                 <path
                   className="opacity-75"
                   fill="currentColor"
@@ -138,8 +149,13 @@ export default function MindmapPage() {
             >
               <Controls className="bg-white border rounded-md shadow-sm" />
               <Background color="#ccc" gap={16} />
-              <Panel position="top-right" className="bg-white/80 p-2 rounded-md shadow-sm backdrop-blur-sm">
-                <p className="text-xs text-gray-600">Click on any node for more details</p>
+              <Panel
+                position="top-right"
+                className="bg-white/80 p-2 rounded-md shadow-sm backdrop-blur-sm"
+              >
+                <p className="text-xs text-gray-600">
+                  Click on any node for more details
+                </p>
               </Panel>
             </ReactFlow>
           ) : (
@@ -170,9 +186,12 @@ export default function MindmapPage() {
                 </div>
               ) : (
                 <div className="text-center max-w-md px-4">
-                  <h3 className="font-medium text-lg mb-2">Your mindmap will appear here</h3>
+                  <h3 className="font-medium text-lg mb-2">
+                    Your mindmap will appear here
+                  </h3>
                   <p className="text-gray-600 text-sm">
-                    Enter a topic or concept and click "Generate Mindmap" to visualize your ideas
+                    Enter a topic or concept and click "Generate Mindmap" to
+                    visualize your ideas
                   </p>
                 </div>
               )}
@@ -182,8 +201,11 @@ export default function MindmapPage() {
       </div>
 
       <div className="mt-4 text-sm text-gray-600">
-        <p>Tip: You can drag nodes to rearrange your mindmap and zoom in/out using the controls or mouse wheel.</p>
+        <p>
+          Tip: You can drag nodes to rearrange your mindmap and zoom in/out
+          using the controls or mouse wheel.
+        </p>
       </div>
     </div>
-  )
+  );
 }
